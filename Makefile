@@ -40,6 +40,7 @@ $(BUSYBOX_CONFIG):
 
 $(BUSYBOX_CONFIG_STAMP):
 	$(MAKE) $(BUSYBOX_CONFIG)
+	sed -i -e 's/^# CONFIG_STATIC is not set/CONFIG_STATIC=y/' $(BUSYBOX_CONFIG)
 	sed -i -e 's/^CONFIG_TC=y/# CONFIG_TC is not set/' $(BUSYBOX_CONFIG)
 	touch $(BUSYBOX_CONFIG_STAMP)
 
