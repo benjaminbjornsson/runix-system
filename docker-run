@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+
+IMAGE="${RUNIX_DOCKER_IMAGE:-runix-system-build}"
+ROOT="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+if [ "$#" -eq 0 ]; then
+	set -- sh
+fi
+
+if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
+	printf '%s\n' "Docker image '$IMAGE' does not exist. Build it with: ./scripts/docker-build.sh" >&2
+	exit 1
+fi
+
+exec docker run --rm \
+	--user "$(id -u):$(id -g)" \
+	-e HOME=/tmp \
+	-v "$ROOT:/workspace" \
+	-w /workspace \
+	"$IMAGE" \
+	"$@"
